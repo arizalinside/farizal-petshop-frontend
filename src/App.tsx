@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 
 import Loader from './common/Loader';
 import PageTitle from './components/PageTitle';
@@ -33,12 +34,13 @@ function App() {
     <Loader />
   ) : (
     <DefaultLayout>
+      <ToastContainer />
       <Routes>
         <Route
           index
           element={
             <>
-              <PageTitle title="eCommerce Dashboard | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Dasbor | Farizal Pet Shop" />
               <ECommerce />
             </>
           }
@@ -47,7 +49,7 @@ function App() {
           path="/calendar"
           element={
             <>
-              <PageTitle title="Calendar | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Kalender | Farizal Pet Shop" />
               <Calendar />
             </>
           }
@@ -56,7 +58,7 @@ function App() {
           path="/profile"
           element={
             <>
-              <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Profile | Farizal Pet Shop" />
               <Profile />
             </>
           }
@@ -65,7 +67,7 @@ function App() {
           path="/forms/form-elements"
           element={
             <>
-              <PageTitle title="Form Elements | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Input Penjualan | Farizal Pet Shop" />
               <FormElements />
             </>
           }
@@ -74,7 +76,7 @@ function App() {
           path="/forms/form-layout"
           element={
             <>
-              <PageTitle title="Form Layout | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Form Layout | Farizal Pet Shop" />
               <FormLayout />
             </>
           }
@@ -83,7 +85,7 @@ function App() {
           path="/tables"
           element={
             <>
-              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Data Penjualan | Farizal Pet Shop" />
               <Tables />
             </>
           }
@@ -92,7 +94,7 @@ function App() {
           path="/settings"
           element={
             <>
-              <PageTitle title="Settings | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Settings | Farizal Pet Shop" />
               <Settings />
             </>
           }
@@ -101,7 +103,7 @@ function App() {
           path="/chart"
           element={
             <>
-              <PageTitle title="Basic Chart | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Basic Chart | Farizal Pet Shop" />
               <Chart />
             </>
           }
@@ -110,7 +112,7 @@ function App() {
           path="/ui/alerts"
           element={
             <>
-              <PageTitle title="Alerts | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Alerts | Farizal Pet Shop" />
               <Alerts />
             </>
           }
@@ -119,7 +121,7 @@ function App() {
           path="/ui/buttons"
           element={
             <>
-              <PageTitle title="Buttons | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Buttons | Farizal Pet Shop" />
               <Buttons />
             </>
           }
@@ -128,7 +130,7 @@ function App() {
           path="/auth/signin"
           element={
             <>
-              <PageTitle title="Signin | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Signin | Farizal Pet Shop" />
               <SignIn />
             </>
           }
@@ -137,7 +139,7 @@ function App() {
           path="/auth/signup"
           element={
             <>
-              <PageTitle title="Signup | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Signup | Farizal Pet Shop" />
               <SignUp />
             </>
           }

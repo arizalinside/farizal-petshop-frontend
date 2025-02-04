@@ -6,6 +6,9 @@
   body {
     @apply font-satoshi font-normal text-base text-body bg-whiten relative z-1;
   }
+  :root {
+    --radius: 0.5rem;
+  }
 }
 
 @layer components {

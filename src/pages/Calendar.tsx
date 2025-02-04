@@ -6,7 +6,7 @@ import Breadcrumb from '../components/Breadcrumbs/Breadcrumb';
 const Calendar = () => {
   return (
     <>
-      <Breadcrumb pageName="Calendar" />
+      <Breadcrumb pageName="Kalender" />
       <FullCalendar
         plugins={[dayGridPlugin, googleCalendarPlugin]}
         initialView="dayGridMonth"
