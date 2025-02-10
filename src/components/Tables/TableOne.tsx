@@ -1,81 +1,54 @@
 import { PRODUCT } from '../../types/brand';
 import { useState, useEffect } from 'react';
-import { MdModeEdit } from "react-icons/md";
+import { MdDelete, MdModeEdit } from "react-icons/md";
+import { toast } from 'react-toastify';
 import EditDialogProduct from '../Dialog/EditDialogProduct';
+import DeleteDialogProduct from '../Dialog/DeleteDialogProduct';
 import axios from 'axios';
 import Loader from "../../common/Loader";
 
-// const brandData: BRAND[] = [
-
-
-//   {
-//     logo: BrandOne,
-//     name: 'Google',
-//     visitors: 3.5,
-//     revenues: '5,768',
-//     sales: 590,
-//     conversion: 4.8,
-//   },
-//   {
-//     logo: BrandTwo,
-//     name: 'Twitter',
-//     visitors: 2.2,
-//     revenues: '4,635',
-//     sales: 467,
-//     conversion: 4.3,
-//   },
-//   {
-//     logo: BrandThree,
-//     name: 'Github',
-//     visitors: 2.1,
-//     revenues: '4,290',
-//     sales: 420,
-//     conversion: 3.7,
-//   },
-//   {
-//     logo: BrandFour,
-//     name: 'Vimeo',
-//     visitors: 1.5,
-//     revenues: '3,580',
-//     sales: 389,
-//     conversion: 2.5,
-//   },
-//   {
-//     logo: BrandFive,
-//     name: 'Facebook',
-//     visitors: 3.5,
-//     revenues: '6,768',
-//     sales: 390,
-//     conversion: 4.2,
-//   },
-// ];
-
 const host = 'localhost:3000';
 
-const TableOne = () => {
-  const [dataInventory, setDataInventory] = useState<PRODUCT[]>([]);
-  const [open, setOpen] = useState(false);
-  const [productId, setProductId] = useState(0);
-  const [loading, setLoading] = useState<boolean>(false);
+interface TableOneProps {
+  getAllProduct: () => Promise<any>
+  dataInventory: PRODUCT[]; 
+  setDataInventory: React.Dispatch<React.SetStateAction<PRODUCT[]>>;
+}
 
-  const fetchData = () => {
-    return axios.get(`http://${host}/api/products`)
-  }
+const TableOne = ({getAllProduct, dataInventory, setDataInventory}: TableOneProps) => {
+  const [open, setOpen] = useState(false);
+  const [deleteAlert, setDeleteAlert] = useState(false);
+  const [productId, setProductId] = useState(0);
+  const [oneProduct, setOneProduct] = useState<{id: number, product_name: string} | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleEdit = (id: number) => {
     setOpen(true);
     setProductId(id);
   }
+  const handleDelete = (id: number, product_name: string) => {
+    setDeleteAlert(true);
+    setOneProduct({ id, product_name });
+  }
 
   const handleSave = async (value: { id: string; product_name: string; product_price: number; capital_price: number }) => {
-    // hit api update data and call fetchData
     try {
       setLoading(true);
       await axios.put(`http://${host}/api/products/${value.id}`, value);
-      const updatedData = await fetchData();
-      setDataInventory(updatedData.data.data);
+      const updatedData = await getAllProduct();
+      setDataInventory(updatedData.data);
+      toast.success(`Berhasil mengubah data produk`, {
+        autoClose: 3000,
+        position: 'top-center',
+        theme: 'dark'
+      })
     } catch (error) {
       console.error('Error:', error);
+      toast.error('Gagal mengubah data produk', {
+        autoClose: 3000,
+        position: 'top-center',
+        theme: 'dark'
+      })
     } finally {
       setLoading(false);
       setOpen(false);
@@ -83,20 +56,22 @@ const TableOne = () => {
   }
 
   useEffect(() => {
-    fetchData()
-      .then((response) => {
-        console.log('Response data:', response.data);
-        setDataInventory(response.data.data);
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      })
+    const fetchData = async () => {
+      try {
+        const result = await getAllProduct();
+        setDataInventory(result.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
+
+    fetchData();
   }, []);
 
   return (
     <div className="relative">
       {loading && <Loader />}
-      <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+      <div className="rounded-sm border border-stroke bg-white lg:pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
         <div className="max-w-full overflow-x-auto">
           <table className="w-full table-auto">
             <thead>
@@ -161,19 +136,34 @@ const TableOne = () => {
                     </p>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                    <button onClick={() => handleEdit(product.id)}>
-                      <MdModeEdit />
-                    </button>
+                    <div className='flex'>
+                      <button className='bg-primary p-2 rounded-sm text-white' onClick={() => handleEdit(product.id)}>
+                        <MdModeEdit />
+                      </button>
+                      <button className='mx-3 bg-primary p-2 rounded-sm text-white' onClick={() => handleDelete(product.id, product.product_name)}>
+                        <MdDelete />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
-              {open && (
-                <EditDialogProduct open={open} setOpen={setOpen} onSave={handleSave} productId={productId} />
-              )}
             </tbody>
           </table>
         </div>
       </div>
+      
+      {open && (
+        <EditDialogProduct open={open} setOpen={setOpen} onSave={handleSave} productId={productId} />
+      )}
+      {deleteAlert && oneProduct && (
+        <DeleteDialogProduct 
+          deleteAlert={deleteAlert} 
+          setDeleteAlert={setDeleteAlert} 
+          dataProduct={oneProduct} 
+          getAllProduct={getAllProduct}
+          setDataInventory={setDataInventory}
+        />
+      )}
     </div>
   );
 };

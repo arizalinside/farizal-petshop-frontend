@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Loader from "../../common/Loader";
 import axios from "axios";
+import ButtonComponent from "@/pages/UiElements/ButtonComponent";
 import {
   Dialog,
   DialogTrigger,
@@ -25,29 +26,15 @@ interface Product {
 }
 
 const EditDialogProduct = ({ open, setOpen, onSave, productId }: EditDialogProps) => {
-  // let inputValue = "";
-  
-  const [options, setOptions] = useState<{ value: string; label: string }[]>([]);
-  const [dataProduct, setDataProduct] = useState<{ id: string; product_name: string; product_price: number, capital_price: number; }[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    const fetchSelectedOptions = async () => {
+    const fetchSelectedProduct = async () => {
       try {
         setLoading(true);
         const response = await axios.get('http://localhost:3000/api/products')
-        const data: Product[] = response.data.data;
-        console.log(data, "data")
-        
-        // const formattedOptions = data.map((product) => ({
-        //   value: product.id,
-        //   label: product.product_name
-        // }))
-        
-        // setOptions(formattedOptions);
-        // setDataProduct(data);
-        // setSelectedProduct(data);
+        const data: Product[] = response.data.data.data;
 
         const foundProduct = data.find((product) => product.id == String(productId));
         if (foundProduct) {
@@ -60,15 +47,8 @@ const EditDialogProduct = ({ open, setOpen, onSave, productId }: EditDialogProps
       }
     }
 
-    fetchSelectedOptions();
+    fetchSelectedProduct();
   }, [productId, open]);
-
-  const handleProductChange = (selectedOption: { value: string; label: string }) => {
-    const found = dataProduct.find((product) => product.id == selectedOption.value);
-    if (found) {
-      setSelectedProduct(found);
-    }
-  }
 
   const handleNameChange = (value: string) => {
     if (selectedProduct) {
@@ -94,8 +74,8 @@ const EditDialogProduct = ({ open, setOpen, onSave, productId }: EditDialogProps
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Edit Data</DialogTitle>
-            <DialogDescription>Silahkan edit data di bawah ini.</DialogDescription>
+            <DialogTitle>Edit Data Produk</DialogTitle>
+            <DialogDescription>Silahkan edit data produk di bawah ini.</DialogDescription>
           </DialogHeader>
 
           <form
@@ -121,13 +101,6 @@ const EditDialogProduct = ({ open, setOpen, onSave, productId }: EditDialogProps
                 value={selectedProduct ? selectedProduct.product_name : ""}
                 onChange={(e) => handleNameChange(e.target.value)}
               />
-              {/* <SelectGroupOne 
-                label="Pilih produk" 
-                options={options} 
-                onChange={handleProductChange} 
-                value={selectedProduct ? selectedProduct.id : ""} 
-                readOnly
-              /> */}
             </div>
             <div>
               <label>Harga Jual</label>
@@ -149,12 +122,13 @@ const EditDialogProduct = ({ open, setOpen, onSave, productId }: EditDialogProps
                 onChange={(e) => handlePriceChange("capital_price", Number(e.target.value))}
               />
             </div>
-            <button
+            {/* <button
               type="submit"
               className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
             >
               Simpan
-            </button>
+            </button> */}
+            <ButtonComponent buttonText="Simpan" />
           </form>
         </DialogContent>
       </Dialog>
