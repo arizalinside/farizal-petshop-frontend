@@ -17,7 +17,7 @@ interface DeleteDialogProps {
   deleteAlert: boolean;
   setDeleteAlert: React.Dispatch<React.SetStateAction<boolean>>;
   dataProduct: { id: number; product_name: string };
-  getAllProduct: () => Promise<any>;
+  getAllProduct: (page: number) => Promise<any>;
   setDataInventory: React.Dispatch<React.SetStateAction<PRODUCT[]>>;
 }
 
@@ -25,8 +25,8 @@ const DeleteDialogProduct = ({ deleteAlert, setDeleteAlert, dataProduct, getAllP
   const handleDelete = async () => {
     try {
       await axios.delete(`http://localhost:3000/api/products/${dataProduct.id}`)
-      const updatedData = await getAllProduct();
-      setDataInventory(updatedData.data);
+      const updatedData = await getAllProduct(1);
+      setDataInventory(updatedData.data.data);
       toast.success(`Berhasil menghapus ${dataProduct.product_name}`, {
         autoClose: 3000,
         position: 'top-center',

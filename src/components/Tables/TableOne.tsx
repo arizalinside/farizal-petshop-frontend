@@ -10,12 +10,14 @@ import Loader from "../../common/Loader";
 const host = 'localhost:3000';
 
 interface TableOneProps {
-  getAllProduct: () => Promise<any>
+  getAllProduct: (page: number) => Promise<any>
   dataInventory: PRODUCT[]; 
   setDataInventory: React.Dispatch<React.SetStateAction<PRODUCT[]>>;
+  setTotalPages: React.Dispatch<React.SetStateAction<number>>
+  setTotalItems: React.Dispatch<React.SetStateAction<number>>
 }
 
-const TableOne = ({getAllProduct, dataInventory, setDataInventory}: TableOneProps) => {
+const TableOne = ({getAllProduct, dataInventory, setDataInventory, setTotalPages, setTotalItems}: TableOneProps) => {
   const [open, setOpen] = useState(false);
   const [deleteAlert, setDeleteAlert] = useState(false);
   const [productId, setProductId] = useState(0);
@@ -35,8 +37,8 @@ const TableOne = ({getAllProduct, dataInventory, setDataInventory}: TableOneProp
     try {
       setLoading(true);
       await axios.put(`http://${host}/api/products/${value.id}`, value);
-      const updatedData = await getAllProduct();
-      setDataInventory(updatedData.data);
+      const updatedData = await getAllProduct(1);
+      setDataInventory(updatedData.data.data);
       toast.success(`Berhasil mengubah data produk`, {
         autoClose: 3000,
         position: 'top-center',
@@ -55,18 +57,18 @@ const TableOne = ({getAllProduct, dataInventory, setDataInventory}: TableOneProp
     }
   }
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const result = await getAllProduct();
-        setDataInventory(result.data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    }
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const result = await getAllProduct();
+  //       setDataInventory(result.data.data);
+  //     } catch (error) {
+  //       console.error('Error fetching data:', error);
+  //     }
+  //   }
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
 
   return (
     <div className="relative">
