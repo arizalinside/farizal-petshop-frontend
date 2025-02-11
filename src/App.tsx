@@ -85,7 +85,7 @@ function App() {
           path="/tables"
           element={
             <>
-              <PageTitle title="Data Penjualan | Farizal Pet Shop" />
+              <PageTitle title="Data Produk | Farizal Pet Shop" />
               <Tables />
             </>
           }

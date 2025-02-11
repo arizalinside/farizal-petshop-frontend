@@ -300,7 +300,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                             fill="white"
                           />
                         </svg>
-                        Input Penjualan
+                        Data Penjualan
                       </NavLink>
                     </React.Fragment>
                   );
@@ -448,7 +448,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                       </clipPath>
                     </defs>
                   </svg>
-                  Data Penjualan
+                  Data Produk
                 </NavLink>
               </li>
               {/* <!-- Menu Item Tables --> */}

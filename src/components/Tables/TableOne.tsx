@@ -10,14 +10,16 @@ import Loader from "../../common/Loader";
 const host = 'localhost:3000';
 
 interface TableOneProps {
-  getAllProduct: (page: number) => Promise<any>
+  getAllProduct: (page: number, limit: number) => Promise<any>
   dataInventory: PRODUCT[]; 
   setDataInventory: React.Dispatch<React.SetStateAction<PRODUCT[]>>;
   setTotalPages: React.Dispatch<React.SetStateAction<number>>
   setTotalItems: React.Dispatch<React.SetStateAction<number>>
+  currentPage: number;
+  itemsPerPage: any;
 }
 
-const TableOne = ({getAllProduct, dataInventory, setDataInventory, setTotalPages, setTotalItems}: TableOneProps) => {
+const TableOne = ({getAllProduct, dataInventory, setDataInventory, setTotalPages, setTotalItems, currentPage, itemsPerPage}: TableOneProps) => {
   const [open, setOpen] = useState(false);
   const [deleteAlert, setDeleteAlert] = useState(false);
   const [productId, setProductId] = useState(0);
@@ -37,7 +39,7 @@ const TableOne = ({getAllProduct, dataInventory, setDataInventory, setTotalPages
     try {
       setLoading(true);
       await axios.put(`http://${host}/api/products/${value.id}`, value);
-      const updatedData = await getAllProduct(1);
+      const updatedData = await getAllProduct(currentPage, itemsPerPage);
       setDataInventory(updatedData.data.data);
       toast.success(`Berhasil mengubah data produk`, {
         autoClose: 3000,
@@ -57,19 +59,6 @@ const TableOne = ({getAllProduct, dataInventory, setDataInventory, setTotalPages
     }
   }
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const result = await getAllProduct();
-  //       setDataInventory(result.data.data);
-  //     } catch (error) {
-  //       console.error('Error fetching data:', error);
-  //     }
-  //   }
-
-  //   fetchData();
-  // }, []);
-
   return (
     <div className="relative">
       {loading && <Loader />}
@@ -78,6 +67,9 @@ const TableOne = ({getAllProduct, dataInventory, setDataInventory, setTotalPages
           <table className="w-full table-auto">
             <thead>
               <tr className="bg-gray-2 text-left dark:bg-meta-4">
+                <th className="w-[10px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
+                  No.
+                </th>
                 <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
                   Nama Produk
                 </th>
@@ -98,6 +90,9 @@ const TableOne = ({getAllProduct, dataInventory, setDataInventory, setTotalPages
             <tbody>
               {dataInventory.map((product, key) => (
                 <tr key={key}>
+                  <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
+                    <span>{currentPage === 1 ? key + 1 : (currentPage - 1) * itemsPerPage + key + 1}</span>
+                  </td>
                   <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                     <span>{product.product_name}</span>
                   </td>
@@ -164,6 +159,8 @@ const TableOne = ({getAllProduct, dataInventory, setDataInventory, setTotalPages
           dataProduct={oneProduct} 
           getAllProduct={getAllProduct}
           setDataInventory={setDataInventory}
+          currentPage={currentPage}
+          itemsPerPage={itemsPerPage}
         />
       )}
     </div>

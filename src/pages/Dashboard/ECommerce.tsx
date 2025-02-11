@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { PRODUCT } from '@/types/brand';
 import CardDataStats from '../../components/CardDataStats';
 import ChartOne from '../../components/Charts/ChartOne';
 import ChartThree from '../../components/Charts/ChartThree';
@@ -6,8 +7,40 @@ import ChartTwo from '../../components/Charts/ChartTwo';
 import ChatCard from '../../components/Chat/ChatCard';
 import MapOne from '../../components/Maps/MapOne';
 import TableOne from '../../components/Tables/TableOne';
+import Loader from '@/common/Loader';
+import axios from 'axios';
 
 const ECommerce: React.FC = () => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [dataInventory, setDataInventory] = useState<PRODUCT[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [itemsPerPage, setItemsPerPage] = useState<number | 'all'>(5);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const [totalItems, setTotalItems] = useState<number>(0);
+
+  useEffect(() => {
+    fetchData(currentPage, itemsPerPage);
+  }, [currentPage, itemsPerPage])
+
+  const fetchData = async (page: number, limit: number | 'all') => {
+    try {
+      setLoading(true);
+      const url = limit === 'all'
+        ? 'http://localhost:3000/api/sales'
+        : `http://localhost:3000/api/sales?page=${page}&limit=${limit}`
+      const response = await axios.get(url);
+      setDataInventory(response.data.data.data);
+      setTotalItems(response.data.data.totalItems);
+      setCurrentPage(limit === 'all' ? 1 : page);
+      setTotalPages(limit === 'all' ? 1 : Math.ceil(response.data.data.totalItems / limit))
+      // return response.data;
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
@@ -103,7 +136,15 @@ const ECommerce: React.FC = () => {
         <ChartThree />
         <MapOne />
         <div className="col-span-12 xl:col-span-8">
-          <TableOne />
+          <TableOne 
+            getAllProduct={fetchData}
+            dataInventory={dataInventory}
+            setDataInventory={setDataInventory}
+            setTotalPages={setTotalPages}
+            setTotalItems={setTotalItems}
+            currentPage={currentPage}
+            itemsPerPage={itemsPerPage}
+          />
         </div>
         <ChatCard />
       </div>
