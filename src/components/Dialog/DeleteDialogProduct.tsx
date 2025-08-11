@@ -12,23 +12,24 @@ import {
 import axios from "axios";
 import { PRODUCT } from "@/types/brand";
 import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, AppDispatch } from "@/redux/store";
+import { fetchProducts, setCurrentPage, setItemsPerPage } from "@/redux/slices/productSlice";
 
 interface DeleteDialogProps {
   deleteAlert: boolean;
   setDeleteAlert: React.Dispatch<React.SetStateAction<boolean>>;
   dataProduct: { id: number; product_name: string };
-  getAllProduct: (page: number, limit: number) => Promise<any>;
-  setDataInventory: React.Dispatch<React.SetStateAction<PRODUCT[]>>;
-  currentPage: number;
-  itemsPerPage: number;
 }
 
-const DeleteDialogProduct = ({ deleteAlert, setDeleteAlert, dataProduct, getAllProduct, setDataInventory, currentPage, itemsPerPage }: DeleteDialogProps) => {
+const DeleteDialogProduct = ({ deleteAlert, setDeleteAlert, dataProduct }: DeleteDialogProps) => {
+  const { currentPage, itemsPerPage } = useSelector((state: RootState) => state.products);
+  const dispatch = useDispatch<AppDispatch>();
+
   const handleDelete = async () => {
     try {
       await axios.delete(`http://localhost:3000/api/products/${dataProduct.id}`)
-      const updatedData = await getAllProduct(currentPage, itemsPerPage);
-      setDataInventory(updatedData.data.data);
+      await dispatch(fetchProducts({ page: currentPage, limit: itemsPerPage }));
       toast.success(`Berhasil menghapus ${dataProduct.product_name}`, {
         autoClose: 3000,
         position: 'top-center',

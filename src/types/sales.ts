@@ -5,4 +5,6 @@ export type Sales = {
   capital_price: number;
   quantity: number;
   profit: number;
-}
+  updated_at: string;
+  created_at: string;
+};

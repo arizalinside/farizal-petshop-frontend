@@ -1,0 +1,27 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# VS Code
+.vscode/
+*.suo
+*.njsproj
+*.sln
+
+# Logs and temp files
+*.log
+*.tmp
+temp/
+tmp/
+*.swp
+
+# Environment variables
+.env
