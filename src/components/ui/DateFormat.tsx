@@ -38,9 +38,7 @@ const DateFormat: React.FC<DateFormatProps> = ({ dateString }) => {
   const dd = String(date.getDate()).padStart(2, "0");
   const mmm = bulanList[date.getMonth()];
   const yyyy = date.getFullYear();
-  return (
-    <span>{`${hh}:${mm}:${ss} - ${hari}, ${dd} ${mmm} ${yyyy}`}</span>
-  );
+  return <span>{`${hh}:${mm}:${ss} - ${hari}, ${dd} ${mmm} ${yyyy}`}</span>;
 };
 
 export default DateFormat;
